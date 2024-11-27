@@ -1,34 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import Customer from './components/Customer';
+//import viteLogo from '/vite.svg'
+
+const customers = [
+  {
+    id: 1,
+    image: 'https://raw.githubusercontent.com/KimNakHyun2/Image-Icons/main/icecream/main/ic_0.jpg',
+    name: '홍길동',
+    birthday: '9612324',
+    gender: '남자',
+    job: '대학생'
+  },
+  {
+    id: 2,
+    image: 'https://raw.githubusercontent.com/KimNakHyun2/Image-Icons/main/icecream/main/ic_1.jpg',
+    name: '홍길동2',
+    birthday: '9612321',
+    gender: '여자',
+    job: '무직'
+  },
+  {
+    id: 3,
+    image: 'https://raw.githubusercontent.com/KimNakHyun2/Image-Icons/main/icecream/main/ic_2.jpg',
+    name: '김좌진',
+    birthday: '1212321',
+    gender: '남자',
+    job: '무직'
+  },
+  {
+    id: 3,
+    image: 'https://raw.githubusercontent.com/KimNakHyun2/Image-Icons/main/icecream/main/ic_2.jpg',
+    name: '임꺽정',
+    birthday: '2212321',
+    gender: '남자',
+    job: '도둑'
+  },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {
+        customers.map((custom)=>{
+
+          return (
+            <Customer key ={custom.id} 
+              id = {custom.id} 
+              image={custom.image} 
+              name={custom.name} 
+              birthday={custom.birthday}
+              gender={custom.gender} 
+              job={custom.job}
+            />
+          );        
+        })
+      }
     </>
+    
   )
 }
 
