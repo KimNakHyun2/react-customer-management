@@ -3,12 +3,13 @@
     "private": true,
     "version": "1.0.0",
     "scripts": {
-        "client": "cd client && yarn start",
+        "client": "cd front && yarn dev",
         "server": "nodemon server.js",
-        "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn server\""
+        "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
     },
     "dependencies": {
         "body-parser": "^1.20.3",
+        "cors": "^2.8.5",
         "customer-management": "file:",
         "express": "^4.21.1"
     },
