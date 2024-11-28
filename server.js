@@ -1,3 +1,4 @@
+const fs=require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -8,51 +9,29 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
+
 const corsConfig = {
     origin: 'http://localhost:5000',
     credentials: true,
   };
   
   //app.use(cors(corsConfig));
-  app.use(cors());
+ app.use(cors());
+
+ const data = fs.readFileSync('./db.json');
+ const db_conf = JSON.parse(data);
+ const mysql = require('mysql2');
+ const conn = mysql.createConnection(db_conf);
 
 app.get('/api/customers', (req, res)=>{
-    res.send(
-        [
-            {
-              id: 1,
-              image: 'https://raw.githubusercontent.com/KimNakHyun2/Image-Icons/main/icecream/main/ic_0.jpg',
-              name: '홍길동',
-              birthday: '9612324',
-              gender: '남자',
-              job: '대학생'
-            },
-            {
-              id: 2,
-              image: 'https://raw.githubusercontent.com/KimNakHyun2/Image-Icons/main/icecream/main/ic_1.jpg',
-              name: '홍길동2',
-              birthday: '9612321',
-              gender: '여자',
-              job: '무직'
-            },
-            {
-              id: 3,
-              image: 'https://raw.githubusercontent.com/KimNakHyun2/Image-Icons/main/icecream/main/ic_2.jpg',
-              name: '김좌진',
-              birthday: '1212321',
-              gender: '남자',
-              job: '무직'
-            },
-            {
-              id: 4,
-              image: 'https://raw.githubusercontent.com/KimNakHyun2/Image-Icons/main/icecream/main/ic_2.jpg',
-              name: '임꺽정',
-              birthday: '2212321',
-              gender: '남자',
-              job: '도둑'
-            },
-          ]
-    );
+  conn.connect();
+  conn.query("select * from customer", 
+    (err, rows, fields) => {
+      if(err)
+        console.error('err db connect!!!' + err.stack);
+
+      res.send(rows);
+  });
 });
 
 // app.use(cors({
