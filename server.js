@@ -23,6 +23,10 @@ const corsConfig = {
  const mysql = require('mysql2');
  const conn = mysql.createConnection(db_conf);
 
+ //file upload
+ const multer = require('multer');
+ const upload = multer({dest:'./upload'});
+
 app.get('/api/customers', (req, res)=>{
   conn.connect();
   conn.query("select * from customer", 
@@ -34,10 +38,21 @@ app.get('/api/customers', (req, res)=>{
   });
 });
 
-// app.use(cors({
-//     origin: '*', // 모든 출처 허용 옵션. true 를 써도 된다.
-// }));
+app.use('/image', express.static('./upload'))
 
-
-
+app.post('/api/customers', upload.single('image'), (req, res) => {
+  let sql = 'INSERT INTO customer VALUES(null, ?, ?, ?, ?, ?)';
+  let image = '/image/' + req.file.filename;
+  let name = req.body.name;
+  let birthday = req.body.birthday;
+  let gender = req.body.gender;
+  let job = req.body.job;
+  let params = [image, name, birthday, gender, job];
+  console.info(params);
+  conn.query(sql, params, (err, rows, fields) => {
+    console.error(err);
+    res.send(rows);
+  });
+}
+);
 app.listen(port, ()=>console.log(`Listen on ${port}`));

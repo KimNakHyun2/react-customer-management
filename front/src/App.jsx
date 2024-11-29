@@ -2,6 +2,7 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/ma
 import { useEffect, useState } from 'react';
 import './App.css';
 import Customer from './components/Customer';
+import CustomerAdd from './components/CustomerAdd';
 //import viteLogo from '/vite.svg'
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
   }, []);
   
   return (
-    
+    <div>
     <Paper >
         <Table>
           <TableHead>
@@ -54,7 +55,8 @@ function App() {
           </TableBody>
         </Table>
     </Paper>
-
+    <CustomerAdd/>
+    </div>
   )
 }
 
