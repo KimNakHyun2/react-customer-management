@@ -1,14 +1,33 @@
 
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import axios from 'axios';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
-const CustomerAdd = () => {
+
+const CustomerAdd = (props) => {
     const selectedFiles = useRef(null);
-    const userName = useRef('');
-    const birthday = useRef('');
-    const gender = useRef('');
-    const job = useRef('');
-    const fileName = useRef('');
+    // const userName = useState('');
+    // const birthday = useState('');
+    // const gender = useState('');
+    // const job = useState('');
+    //const fileName = useRef('');
+
+    const [state, setState] = useState({
+        name: '',
+        birthday: '',
+        gender: '',
+        job: ''
+    });
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const handleDialogOpen = () =>{
+        setDialogOpen(true);
+    }
+
+    const handleDialogClose = () =>{
+        setDialogOpen(false);
+    }
 
     const addCustomer = () =>{
         const url = 'http://localhost:5000/api/customers';
@@ -20,11 +39,11 @@ const CustomerAdd = () => {
         // formData.append('job', job.current.value);
 
         const sendData = {
-            image: selectedFiles.current.files[0],
-            name:  userName.current.value,
-            birthday: birthday.current.value,
-            gender: gender.current.value,
-            job: job.current.value
+            image: selectedFiles.current.files?.[0],
+            name:  state.name,
+            birthday: state.birthday,
+            gender: state.gender,
+            job: state.gender
         };
 
         const config = {
@@ -38,18 +57,35 @@ const CustomerAdd = () => {
         .then((response)=>{
             console.log(response);
             selectedFiles.current.files = null,
-            userName.current.value = '';
-            birthday.current.value = '';
-            gender.current.value = '';
-            job.current.value = '';
+            setState({
+                name: '',
+                birthday: '',
+                gender: '',
+                job: ''
+            });
+            // userName.current.value = '';
+            // birthday.current.value = '';
+            // gender.current.value = '';
+            // job.current.value = '';
+            handleDialogClose();
+            
+            props.stateRefresh();
         });
     }
 
     const  handleFormSubmit = (e) => {
-        e.preventDefault();
+        //e.preventDefault();
         addCustomer();
     }
 
+    const onDialogClose = () =>{
+        //props.stateRefresh();
+    }
+
+
+    // const handleDialogClose = () =>{
+    //     setDialogOpen (false);
+    // }
     // const  handleFileChange = (e) =>{
     //     setState({
     //         file:e.target.files[0],
@@ -57,23 +93,52 @@ const CustomerAdd = () => {
     //     });
     // }
 
-    // const handleValueChange = (e) =>{
-    //     let nextState = {};
-    //     nextState[e.target.name] = e.target.value;
-    //     setState(nextState);
-    // }
+    const handleValueChange = (e) =>{
+        const {name, value} = e.target;
+        const nextState = {
+            ...state,
+            [name]: value
+        };
+        setState(nextState);
+    }
 
 
     return (
-        <form onSubmit={handleFormSubmit} encType='multipart/form-data' >
-                <h1>고객추가</h1>
-                프로필 이미지: <input type="file" name="file" ref={selectedFiles}/><br/>
-                이름: <input type="text" name="userName" ref={userName}/><br/>
-                생년월일: <input type="text" name="birthday" ref={birthday}/><br/>
-                성별: <input type="text" name="gender" ref={gender}/><br/>
-                직업: <input type="text" name="job" ref={job}/><br/>
-                <button type="submit" >추가하기</button>
-            </form>
+        <div>
+            <Button variant="contained" 
+            color="primary" 
+            onClick={()=>{handleDialogOpen()}}>고객추가하기</Button>
+
+            
+            <Dialog open={dialogOpen} onClose={()=>{() => onDialogClose()}}>
+                <DialogTitle>고객 추가</DialogTitle>
+                <DialogContent>
+                <Button
+                    variant="contained"
+                    component="label"
+                    >
+                    Upload File
+                    <input
+                        type="file"
+                        hidden
+                        ref={selectedFiles}
+                    />
+                    </Button>
+                    <br/>
+                    <TextField label="이름" type="text" name="name" onChange={handleValueChange}/><br/>
+                    <TextField label="생년월일" type="text" name="birthday" onChange={handleValueChange}/><br/>
+                    <TextField label="성별" type="text" name="gender" onChange={handleValueChange}/><br/>
+                    <TextField label="직업" type="text" name="job" onChange={handleValueChange}/><br/>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="contained" color="primary" onClick={()=>{handleFormSubmit()}}>추가</Button>
+                    <Button variant="outlined" color="primary" onClick={()=>{handleDialogClose()}}>닫기</Button>
+                </DialogActions>
+            </Dialog>
+            
+        </div>
+
+        
     );
 }
 

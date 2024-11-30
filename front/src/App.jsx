@@ -19,6 +19,10 @@ function App() {
 
   };
 
+  const stateRefresh = () =>{
+    setCustomers([]);
+    callApi();
+  }
   useEffect(()=>{
     callApi();
   }, []);
@@ -48,6 +52,7 @@ function App() {
                         birthday={custom.birthday}
                         gender={custom.gender} 
                         job={custom.job}
+                        stateRefresh = {stateRefresh}
                       />
                     );        
                   })
@@ -55,7 +60,7 @@ function App() {
           </TableBody>
         </Table>
     </Paper>
-    <CustomerAdd/>
+    <CustomerAdd stateRefresh={stateRefresh}/>
     </div>
   )
 }
